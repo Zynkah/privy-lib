@@ -1,6 +1,6 @@
 {
   "name": "fare-privy-core",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A comprehensive React library for Privy authentication and wallet management with casino gaming features",
   "keywords": [
     "privy",
@@ -12,7 +12,8 @@
     "casino",
     "gaming",
     "blockchain",
-    "ethereum"
+    "ethereum",
+    "solana"
   ],
   "homepage": "https://github.com/farePrivy/fare-privy-core#readme",
   "repository": {

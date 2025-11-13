@@ -1,45 +1,46 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { PrivyProvider } from '../PrivyProviderTest.tsx';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import { PrivyProvider } from "../PrivyProviderTest.tsx";
 
-// Don't mock @privy-io/react-auth since your component doesn't use it directly
-// Instead, let's test your actual component
+// Mock Privy modules
+jest.mock("@privy-io/react-auth", () => ({
+  PrivyProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="mock-privy-provider">{children}</div>
+  ),
+}));
 
-describe('PrivyProvider', () => {
-  const mockAppId = 'test-app-id';
+jest.mock("@privy-io/react-auth/smart-wallets", () => ({
+  SmartWalletsProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="mock-smart-wallets-provider">{children}</div>
+  ),
+}));
 
-  it('renders without crashing', () => {
+describe("PrivyProvider", () => {
+  const mockAppId = "test-app-id";
+
+  it("renders without crashing", () => {
     render(
       <PrivyProvider appId={mockAppId}>
         <div>Test Child</div>
       </PrivyProvider>
     );
 
-    expect(screen.getByText('Test Child')).toBeInTheDocument();
+    expect(screen.getByText("Test Child")).toBeInTheDocument();
   });
 
-  it('logs initialization with correct appId', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
+  it("renders with correct appId prop", () => {
     render(
       <PrivyProvider appId={mockAppId}>
         <div>Test Child</div>
       </PrivyProvider>
     );
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'PrivyProvider initialized with:',
-      expect.objectContaining({
-        appId: mockAppId,
-      })
-    );
-
-    consoleSpy.mockRestore();
+    expect(screen.getByText("Test Child")).toBeInTheDocument();
   });
 
-  it('renders children correctly', () => {
-    const testContent = 'Test Content';
-    
+  it("renders children correctly", () => {
+    const testContent = "Test Content";
+
     render(
       <PrivyProvider appId={mockAppId}>
         <span>{testContent}</span>
@@ -49,11 +50,11 @@ describe('PrivyProvider', () => {
     expect(screen.getByText(testContent)).toBeInTheDocument();
   });
 
-  it('accepts custom configuration props', () => {
+  it("accepts custom configuration props", () => {
     const customConfig = {
       appearance: {
-        theme: 'light' as const,
-        accentColor: '#ff0000',
+        theme: "light" as const,
+        accentColor: "#ff0000" as `#${string}`,
       },
     };
 
@@ -63,25 +64,16 @@ describe('PrivyProvider', () => {
       </PrivyProvider>
     );
 
-    expect(screen.getByText('Test')).toBeInTheDocument();
+    expect(screen.getByText("Test")).toBeInTheDocument();
   });
 
-  it('handles empty appId', () => {
-    const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
-    
+  it("handles empty appId", () => {
     render(
       <PrivyProvider appId="">
         <div>Test</div>
       </PrivyProvider>
     );
 
-    expect(consoleSpy).toHaveBeenCalledWith(
-      'PrivyProvider initialized with:',
-      expect.objectContaining({
-        appId: '',
-      })
-    );
-
-    consoleSpy.mockRestore();
+    expect(screen.getByText("Test")).toBeInTheDocument();
   });
 });

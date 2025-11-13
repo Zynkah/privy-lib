@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, fireEvent, act } from "@testing-library/react";
+import { useSnapshot } from "valtio";
 import { PrivyProvider } from "../PrivyProviderTest";
 import { switchWalletState } from "../farePrivy/store/switchWallet";
 
@@ -10,13 +11,20 @@ jest.mock("@privy-io/react-auth", () => ({
   ),
 }));
 
+jest.mock("@privy-io/react-auth/smart-wallets", () => ({
+  SmartWalletsProvider: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="smart-wallets-provider">{children}</div>
+  ),
+}));
+
 describe("Package Integration Tests", () => {
   it("can use both exports together", () => {
     const TestComponent = () => {
       return (
         <div>
           <span data-testid="wallet-state">
-            Wallet Modal Open: {switchWalletState.isWalletModalOpen ? "Yes" : "No"}
+            Wallet Modal Open:{" "}
+            {switchWalletState.isWalletModalOpen ? "Yes" : "No"}
           </span>
           <span data-testid="connector-type">
             Connector Type: {switchWalletState.selectedConnectorType || "None"}
@@ -81,7 +89,9 @@ describe("Package Integration Tests", () => {
       return (
         <div>
           <span data-testid="modal-state">
-            {switchWalletState.isWalletModalOpen ? "Modal Open" : "Modal Closed"}
+            {switchWalletState.isWalletModalOpen
+              ? "Modal Open"
+              : "Modal Closed"}
           </span>
           <button
             onClick={() => {
