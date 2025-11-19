@@ -2,20 +2,22 @@
 
 A lightweight React library for Privy authentication and wallet management, designed for casino and gaming applications on **Ethereum and Solana**.
 
-## 🚀 Current Features (v1.7.0)
+## 🚀 Current Features (v1.7.7)
 
 - **🔐 Real Privy Auth**: Full Privy authentication integration with login/logout
 - **🎰 Casino-Ready**: Pre-configured for casino/gaming use cases  
 - **⛓️ Multi-Chain**: Support for both Ethereum and Solana networks
-- **� Balance Checking**: Native currency balance fetching (ETH/SOL)
-- **�💼 Wallet State**: Valtio-based wallet switching state management
+- **💰 Reliable Balance Checking**: Simplified balance fetching based on proven working patterns (ETH/SOL)
+- **🎯 Active Wallet Management**: useActiveWallet hook based on successful casino implementations
+- **🔗 Solana Helper Functions**: Easy Solana connector setup with TypeScript compatibility
+- **💼 Wallet State**: Valtio-based wallet switching state management
 - **🎨 Themeable**: Customize colors and branding per casino
-- **🪝 Complete Hooks**: 5 dependency-free hooks including balance checking
+- **🪝 Micro Hooks**: 6 focused hooks with single responsibilities and proven reliability
 - **🚪 Login/Logout**: Easy authentication control for casino entry/exit
 - **⚡ TypeScript**: Full TypeScript support with type declarations
-- **🧪 Tested**: Complete test suite with 17 passing tests
-- **📦 Optimized**: Streamlined codebase with unused files removed
-- **🗂️ Clean**: Minimal dependencies, focused API
+- **🧪 Tested**: 3/4 test suites passing with reliable integration tests
+- **📦 Tree Shakable**: Import only what you need for smaller bundle sizes
+- **🗂️ Clean**: Minimal dependencies, proven patterns
 
 ## 📦 Installation
 
@@ -45,6 +47,7 @@ npm install fare-privy-core @privy-io/react-auth styled-components@^5.3.0 valtio
 ```tsx
 import { 
   PrivyProvider,
+  useActiveWallet,
   useConnectedWallets,
   useIsAuthenticated,
   useWalletBalance
@@ -196,7 +199,7 @@ function MultiChainCasino() {
 
 ## 🪝 Using Wallet Hooks
 
-Four simple, **dependency-free** hooks to access wallet data and control authentication in your casino:
+Six focused **micro hooks** with proven patterns - import only what you need for optimal bundle sizes:
 
 ### `useAuthActions()` - Login & Logout Control
 
@@ -233,6 +236,26 @@ function WalletDisplay() {
   } = useConnectedWallets();
 
   return <div>Address: {primaryWallet?.address}</div>;
+}
+```
+
+### `useActiveWallet()` - Get active wallet (proven pattern)
+
+```tsx
+import { useActiveWallet } from 'fare-privy-core';
+
+function CasinoGame() {
+  const {
+    activeWallet,        // Current active wallet
+    privyWallet,         // Embedded Privy wallet
+    externalWallet,      // MetaMask/Phantom etc.
+    walletAddress,       // Active wallet address
+    isWalletAuthed,      // Boolean: has active wallet
+    readyAndAuth         // Boolean: ready and authenticated
+  } = useActiveWallet();
+
+  if (!isWalletAuthed) return <div>Connect wallet to play</div>;
+  return <div>Playing with: {walletAddress}</div>;
 }
 ```
 
@@ -298,11 +321,40 @@ function WalletBalanceDisplay() {
 
 📖 **[See complete hook documentation →](./HOOKS.md)**
 
-## � Changelog
+## 📝 Changelog
 
-### v1.7.0 (Latest)
+### v1.7.6 (Latest) - Reliable Patterns & Simplified Balance
+- **🎯 Added**: useActiveWallet hook based on proven working casino patterns
+- **💰 Simplified**: useWalletBalance rewritten with reliable single-wallet approach
+- **🔧 Fixed**: Removed complex wallet filtering in favor of simple active wallet selection
+- **⚡ Improved**: Balance fetching now uses sequential approach instead of complex promises
+- **🧪 Tested**: 3/4 test suites passing with reliable integration tests
+- **📖 Enhanced**: Updated documentation with new useActiveWallet examples
+
+### v1.7.4 - Micro Hooks Architecture
+- **🪝 Refactored**: Split monolithic useWallets hook into 5 focused micro hooks
+- **🌳 Tree Shaking**: Import only the hooks you need for smaller bundle sizes
+- **🧹 Maintainable**: Each hook has single responsibility and clear purpose
+- **📁 Organized**: Proper hooks/index.ts structure for clean imports
+- **⚡ Performance**: Reduced coupling between hook functionalities
+- **🔧 Developer Experience**: Easier testing and debugging of individual hooks
+
+### v1.7.3 - Enhanced Balance with Privy Providers
+- **🔗 Enhanced**: useWalletBalance now uses Privy's native wallet providers instead of manual RPC calls
+- **⚡ Improved**: More reliable balance fetching with proper provider integration
+- **🔧 Added**: createSolanaConnectors() and disableSolanaConnectors() helper functions
+- **🛠️ Fixed**: Solana connector TypeScript compatibility issues
+- **🧪 Tested**: All functionality verified with improved architecture
+- **📖 Documentation**: Updated with balance improvements and new helper functions
+
+### v1.7.2
+- **🐛 Fixed**: Solana connector configuration with proper TypeScript types
+- **🔄 Added**: Helper functions for dynamic Solana connector management
+- **⚡ Improved**: Error handling for missing Solana wallet adapter packages
+
+### v1.7.1
 - **💰 Added**: useWalletBalance hook for native currency balance checking
-- **⛓️ Enhanced**: Support for ETH and SOL balance fetching via RPC calls
+- **⛓️ Enhanced**: Support for ETH and SOL balance fetching
 - **⚡ Improved**: Real-time balance updates with loading states and error handling
 - **🔄 Added**: Manual balance refresh functionality
 - **🧪 Tested**: All 17 tests passing including new balance functionality

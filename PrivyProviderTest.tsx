@@ -5,6 +5,46 @@ import {
 } from "@privy-io/react-auth";
 import { SmartWalletsProvider } from "@privy-io/react-auth/smart-wallets";
 
+/**
+ * Helper function to create proper Solana wallet configuration
+ * Use this to avoid TypeScript errors with Solana connectors
+ */
+export const createSolanaConnectors = () => ({
+  connectors: async () => {
+    try {
+      // Dynamically import wallet adapters to avoid bundle size issues
+      // Users need to install these packages: @solana/wallet-adapter-phantom @solana/wallet-adapter-solflare
+      const adapters = [];
+      
+      try {
+        const { PhantomWalletAdapter } = await import('@solana/wallet-adapter-phantom' as any);
+        adapters.push(new PhantomWalletAdapter());
+      } catch (e) {
+        console.warn('PhantomWalletAdapter not available');
+      }
+      
+      try {
+        const { SolflareWalletAdapter } = await import('@solana/wallet-adapter-solflare' as any);
+        adapters.push(new SolflareWalletAdapter());
+      } catch (e) {
+        console.warn('SolflareWalletAdapter not available');
+      }
+      
+      return adapters;
+    } catch (error) {
+      console.warn('Failed to load Solana wallet adapters:', error);
+      return [];
+    }
+  }
+});
+
+/**
+ * Helper to disable Solana without errors
+ */
+export const disableSolanaConnectors = () => ({
+  connectors: []
+});
+
 export interface PrivyProviderProps {
   children: React.ReactNode;
   /**
