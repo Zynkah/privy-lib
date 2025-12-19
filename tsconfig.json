@@ -6,7 +6,7 @@
     "jsx": "react-jsx",
     /* Modules */
     "module": "ESNext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
@@ -32,8 +32,7 @@
     "skipLibCheck": true
   },
   "include": [
-    "index.ts",
-    "PrivyProviderTest.tsx"
+    "index.ts"
   ],
   "exclude": [
     "node_modules",
