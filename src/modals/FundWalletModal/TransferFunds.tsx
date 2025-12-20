@@ -1,5 +1,6 @@
 import numeral from "numeral";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
 import {
   BubbleWrapper,
   DepositBoxWrapper,
@@ -31,20 +32,19 @@ export const TransferModalFunds: React.FC<TransferModalFundsProps> = ({
   binanceIcon = "/icons/binance.svg",
   krakenIcon = "/icons/kraken.svg",
 }) => {
-  const [prevBalance, setPrevBalance] = useState(selectedCurrencyBalance);
+  const prevBalanceRef = useRef(selectedCurrencyBalance);
   const [balanceDifference, setBalanceDifference] = useState("0.00");
 
   useEffect(() => {
     const currentNum = numeral(selectedCurrencyBalance).value() ?? 0;
-    const prevNum = numeral(prevBalance).value() ?? 0;
+    const prevNum = numeral(prevBalanceRef.current).value() ?? 0;
     if (currentNum !== prevNum) {
       const diff = currentNum - prevNum;
       // Only show positive differences (deposits)
       setBalanceDifference(diff > 0 ? numeral(diff).format("0,0.00") : "0.00");
-      setPrevBalance(selectedCurrencyBalance);
+      prevBalanceRef.current = selectedCurrencyBalance;
     }
-  }, [selectedCurrencyBalance, prevBalance]);
-  
+  }, [selectedCurrencyBalance]);
   return (
     <DepositBoxWrapper>
       <DepositTitle>

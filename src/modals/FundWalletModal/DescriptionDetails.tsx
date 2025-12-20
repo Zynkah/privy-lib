@@ -19,10 +19,10 @@ export const descriptionDetails = (i: number, text: string): JSX.Element => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, transition: { duration: 0.12 } }}
-      transition={{ stiffness: 100 }}
-      style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.25' }}
+      transition={{ type: "spring", stiffness: 100 }}
+      style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.25" }}
     >
       {text}
     </motion.p>
-  )
-}
+  );
+};

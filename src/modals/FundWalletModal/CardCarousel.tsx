@@ -43,8 +43,7 @@ export const CardCarousel: React.FC<CardCarouselProps> = ({
     ],
     [ethereumBalance]
   );
-  const selectedCardElem = useMemo(() => cards[stepIndex], [cards, stepIndex]);
-
+  const selectedCardElem = cards[stepIndex] ?? cards[0];
   return (
     <Container className={className} style={style}>
       <ContentWrapper>

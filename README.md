@@ -55,19 +55,31 @@ src/
 
 ## 🚀 Quick Start
 
+
 ### Basic Casino Setup
+
+// Example biconomyConfig definition (see Advanced Configuration for more details)
+const biconomyConfig = {
+  chainId: 42161, // required, e.g. Arbitrum One
+  bundlerUrl: 'https://bundler.biconomy.io/api/v2/42161/abc...', // required
+  paymasterUrl: 'https://paymaster.biconomy.io/api/v1/42161/xyz...', // required
+  // Optional fields:
+  entryPointAddress: '0x...', // optional, default provided by SDK
+  // ...add any other supported Biconomy config keys
+};
 
 ```tsx
 import { PrivyProvider } from 'fare-privy-core';
 
 function App() {
   return (
-    <PrivyProvider appId="your-privy-app-id">
+    <PrivyProvider appId="your-privy-app-id" smartWalletConfig={biconomyConfig}>
       <YourCasinoApp />
     </PrivyProvider>
   );
 }
 ```
+// For more details on biconomyConfig, see the Advanced Configuration section below.
 
 ### With Custom Branding
 
@@ -139,25 +151,6 @@ Displays the active wallet’s name and icon.
 
 ---
 
-### Fund Wallet Modal (New)
-
-```tsx
-import { FundWalletModal } from 'fare-privy-core/modals/FundWalletModal';
-function App() {
-  return (
-    <div>
-      <FundWalletModal />
-    </div>
-  );
-}
-```
-
-- The modal uses your active wallet and valtio state.
-- All icons and most props are now npm-friendly and have sensible defaults.
-- Balances are fetched using the `useWalletBalance` hook.
-
----
-
 ### FundWalletModal
 
 A ready-to-use modal for funding your wallet, with animated carousel and exchange/card options.
@@ -168,6 +161,7 @@ A ready-to-use modal for funding your wallet, with animated carousel and exchang
 - Uses `useWalletBalance` for live balances
 - Minimal required props, npm-friendly defaults
 
+**Usage:**
 ---
 
 ## 🪝 Hooks Overview
@@ -194,7 +188,11 @@ See [HOOKS.md](./HOOKS.md) for full details and advanced usage.
 
 ---
 
+
 ## 📚 Example: Enhanced Casino Auth with USDC Vault
+
+// Legend: // required, // optional, // default: ...
+// Note: casinoSlug and casinoEntity.id should match for consistency, but can differ if you support multiple brands. Required fields are marked, optional fields and defaults are noted. See docs for mutually exclusive options.
 
 ```tsx
 import { CasinoAuthProvider } from 'fare-privy-core/lib/casino-auth';
@@ -202,34 +200,40 @@ import { CasinoAuthProvider } from 'fare-privy-core/lib/casino-auth';
 function CustomCasino() {
   return (
     <CasinoAuthProvider
-      casinoSlug="my-casino"
+      casinoSlug="my-casino" // required, should match casinoEntity.id
       customConfig={{
-        appearance: { accentColor: '#ff0000', logo: '/my-logo.png' },
-        blockchain: {
-          currency: 'USDC',
-          primaryChain: 'ARBITRUM',
-          smartWallet: {
-            provider: 'biconomy',
-            vaultConfig: {
-              vaultAddress: '0x...',
-              fareAAAddress: '0x...',
-              usdcAddress: '0x...'
+        appearance: { // optional
+          accentColor: '#ff0000', // optional
+          logo: '/my-logo.png' // optional
+        },
+        blockchain: { // required
+          currency: 'USDC', // required
+          primaryChain: 'ARBITRUM', // required
+          smartWallet: { // optional
+            provider: 'biconomy', // required if smartWallet used
+            vaultConfig: { // required if using smartWallet
+              vaultAddress: '0x...', // required
+              fareAAAddress: '0x...', // required
+              usdcAddress: '0x...' // required
             }
           }
         },
-        api: {
+        api: { // optional
           contracts: {
-            vaultAddress: '0x...',
-            vrfWrapperAddress: '0x...'
+            vaultAddress: '0x...', // required if using vault features
+            vrfWrapperAddress: '0x...' // optional, required for VRF
           }
         }
       }}
       casinoEntity={{
-        id: 'my-casino',
-        username: 'mycasino',
+        id: 'my-casino', // required, should match casinoSlug
+        username: 'mycasino', // required
         config: {
-          title: 'My Custom Casino',
-          colors: { themeColor1: '#ff0000', themeColor2: '#darkred' }
+          title: 'My Custom Casino', // required
+          colors: { // optional
+            themeColor1: '#ff0000', // optional
+            themeColor2: '#darkred' // optional
+          }
         }
       }}
     >
